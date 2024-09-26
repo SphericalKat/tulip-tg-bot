@@ -17,9 +17,9 @@ Tulip is a Telegram bot to manage your groups! It is written in Python and uses 
 2. Create a new bot with [BotFather](https://t.me/BotFather) and get the API token.
 3. Copy the `example.env` file to `.env`, or set the required environment variables directly.
 ```python
-BOT_API_KEY = "YOUR_API_KEY"
+BOT_API_TOKEN = "YOUR_API_TOKEN"
 ```
-5. Run the bot: `python src/main.py`
+5. Run the bot: `python -m tulip`
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
