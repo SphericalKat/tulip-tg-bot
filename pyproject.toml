@@ -1,0 +1,13 @@
+[project]
+name = "tulip-tg-bot"
+version = "0.1.0"
+description = "A Telegram bot written using the python-telegram-bot library"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "python-telegram-bot>=21.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
