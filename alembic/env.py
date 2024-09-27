@@ -20,7 +20,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 from tulip.entities.base import Base #noqa
-from tulip.entities.users import User, Chat, ChatMember #noqa
+from tulip.entities.users import User, Chat, chat_members #noqa
 
 target_metadata = Base.metadata
 

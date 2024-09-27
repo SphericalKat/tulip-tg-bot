@@ -8,8 +8,16 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 chat_members = Table(
     "chat_members",
     Base.metadata,
-    Column("user_id", ForeignKey("users.id"), primary_key=True),
-    Column("chat_id", ForeignKey("chats.id"), primary_key=True),
+    Column(
+        "user_id",
+        ForeignKey("users.id"),
+        primary_key=True,
+    ),
+    Column(
+        "chat_id",
+        ForeignKey("chats.id"),
+        primary_key=True,
+    ),
 )
 
 
@@ -20,7 +28,11 @@ class User(Base):
     username: Mapped[Optional[str]]
 
     chats: Mapped[list["Chat"]] = relationship(
-        secondary=chat_members, back_populates="users"
+        secondary=chat_members,
+        back_populates="users",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        passive_updates=True,
     )
 
     def __repr__(self) -> str:
@@ -34,7 +46,11 @@ class Chat(Base):
     title: Mapped[Optional[str]]
 
     users: Mapped[list["User"]] = relationship(
-        secondary=chat_members, back_populates="chats"
+        secondary=chat_members,
+        back_populates="chats",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        passive_updates=True,
     )
 
     def __repr__(self) -> str:
