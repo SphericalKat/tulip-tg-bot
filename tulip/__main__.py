@@ -1,5 +1,5 @@
 from telegram.ext import ApplicationBuilder, CommandHandler
-from tulip.handlers.general import start
+from tulip.handlers.misc import start
 
 from tulip import config
 
