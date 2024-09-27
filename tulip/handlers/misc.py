@@ -43,3 +43,36 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.effective_message.reply_text(
                 f"This group's id is <code>{chat.id}</code>.", parse_mode="HTML"
             )
+
+
+async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    user_id = await extract_user(msg, context.args)
+
+    # if we extracted a user_id, get the user from the API
+    if user_id:
+        user = await context.bot.get_chat(user_id)
+    # if we didn't extract a user_id, get the info for the user who sent the message
+    elif not msg.reply_to_message and not context.args:
+        user = msg.from_user
+    else:
+        await msg.reply_text(
+            "Please provide a valid user ID, username, mention, or reply to a user's message to get their info."
+        )
+        return
+
+    # build the message
+    text = "<b>User info</b>:\n" \
+    f"<b>ID</b>: <code>{user.id}</code>\n" \
+    f"<b>First name</b>: {user.first_name}\n" \
+    
+    if user.last_name:
+        text += f"<b>Last name</b>: {user.last_name}\n"
+    
+    if user.username:
+        text += f"<b>Username</b>: @{user.username}\n"
+    
+    text += f"<b>User link</b>: <a href='tg://user?id={user.id}'>link</a>"
+
+    # send the message
+    await msg.reply_text(text, parse_mode="HTML")
