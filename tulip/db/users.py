@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from tulip import LOGGER
 from tulip.entities.users import User, Chat
 from tulip.db import engine
@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 def get_userid_by_name(username: str) -> Optional[List[User]]:
     try:
         with Session(engine) as session:
-            return session.query(User).filter(User.username == username).all()
+            return session.query(User).filter(func.lower(User.username) == username.lower()).all()
     except Exception as e:
         LOGGER.exception("Error getting user by name", e)
         return None

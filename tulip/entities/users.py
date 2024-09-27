@@ -30,9 +30,7 @@ class User(Base):
     chats: Mapped[list["Chat"]] = relationship(
         secondary=chat_members,
         back_populates="users",
-        cascade="all, delete-orphan",
-        passive_deletes=True,
-        passive_updates=True,
+        cascade="all",
     )
 
     def __repr__(self) -> str:
@@ -48,9 +46,7 @@ class Chat(Base):
     users: Mapped[list["User"]] = relationship(
         secondary=chat_members,
         back_populates="chats",
-        cascade="all, delete-orphan",
-        passive_deletes=True,
-        passive_updates=True,
+        cascade="all",
     )
 
     def __repr__(self) -> str:
