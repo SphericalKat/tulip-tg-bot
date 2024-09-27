@@ -4,6 +4,7 @@ from telegram import Message, MessageEntity
 from telegram.error import BadRequest
 
 from tulip import LOGGER, bot
+from tulip.db import users as user_repo
 
 
 def get_user_id(username: str):
@@ -15,7 +16,7 @@ def get_user_id(username: str):
         username = username[1:]
 
     # TODO: add
-    users = sql.get_userid_by_name(username)
+    users = user_repo.get_userid_by_name(username)
 
     if not users:
         return None
