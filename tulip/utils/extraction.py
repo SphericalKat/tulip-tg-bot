@@ -1,3 +1,4 @@
+from datetime import datetime, timezone, timedelta
 from typing import List, Optional
 
 from telegram import Message, MessageEntity
@@ -15,9 +16,7 @@ def get_user_id(username: str):
     if username.startswith("@"):
         username = username[1:]
 
-    # TODO: add
     users = user_repo.get_userid_by_name(username)
-    print(users)
 
     if not users:
         return None
@@ -122,9 +121,36 @@ async def extract_user_and_text(
     return user_id, text
 
 
-def extract_text(message) -> str:
+def extract_text(message: Message) -> str:
     return (
         message.text
         or message.caption
         or (message.sticker.emoji if message.sticker else None)
     )
+
+
+async def extract_time(message: Message, time_val: str) -> Optional[datetime]:
+    if any(time_val.endswith(unit) for unit in ("m", "h", "d")):
+        unit = time_val[-1]
+        time_num = time_val[:-1]  # type: str
+        if not time_num.isdigit():
+            await message.reply_text("Invalid time amount specified.")
+            return None
+
+        now = datetime.now(timezone.utc)
+        if unit == "m":
+            bantime = now + timedelta(minutes=int(time_num))
+        elif unit == "h":
+            bantime = now + timedelta(hours=int(time_num))
+        elif unit == "d":
+            bantime = now + timedelta(days=int(time_num))
+        else:
+            return
+        return bantime
+    else:
+        await message.reply_text(
+            "Invalid time type specified. Expected m, h, or d; got: {}".format(
+                time_val[-1]
+            )
+        )
+        return

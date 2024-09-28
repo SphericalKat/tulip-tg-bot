@@ -1,5 +1,5 @@
 from telegram.ext import CommandHandler, MessageHandler
-from tulip.handlers.bans import ban, kick, unban
+from tulip.handlers.bans import ban, kick, tban, unban
 from tulip.handlers.misc import start, id, info
 from tulip.handlers.users import log_user
 
@@ -19,6 +19,7 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("ban", ban), group=2)
     application.add_handler(CommandHandler("unban", unban), group=2)
     application.add_handler(CommandHandler("kick", kick), group=2)
+    application.add_handler(CommandHandler("tban", tban), group=2)
 
     LOGGER.info("Starting polling...")
     application.run_polling()
