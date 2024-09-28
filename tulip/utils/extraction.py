@@ -108,7 +108,7 @@ async def extract_user_and_text(
         return None, None
 
     try:
-        bot.get_chat(user_id)
+        await bot.get_chat(user_id)
     except BadRequest as excp:
         if excp.message in ("User_id_invalid", "Chat not found"):
             await message.reply_text(
