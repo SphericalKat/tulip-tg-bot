@@ -19,7 +19,7 @@ from tulip.utils.extraction import extract_user, extract_user_and_text
 @user_can_restrict
 async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
-    user = update.effective_user # TODO: use for log channels later
+    user = update.effective_user  # TODO: use for log channels later
     msg = update.effective_message
 
     user_id, reason = await extract_user_and_text(msg, context.args)
@@ -69,6 +69,7 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "I'm unable to ban this user due to ... unforeseen reasons. This should not have happened."
             )
 
+
 @require_group_chat
 @bot_can_restrict
 @user_can_restrict
@@ -78,10 +79,10 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
 
     user_id = await extract_user(msg, context.args)
-    
+
     if not user_id:
         return
-    
+
     try:
         member = await chat.get_member(user_id)
     except BadRequest as e:
@@ -90,15 +91,51 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
         else:
             raise e
-    
+
     if user_id == context.bot.id:
         await msg.reply_text("I can't unban myself!")
         return
-    
+
     if member.status != ChatMemberStatus.BANNED:
         await msg.reply_text("This user is not banned in the chat.")
         return
-    
+
     await chat.unban_member(user_id)
     print(f"{member.user.mention_html()} has been unbanned.")
-    await msg.reply_text(f"{member.user.mention_html()} has been unbanned.", parse_mode="HTML")
+    await msg.reply_text(
+        f"{member.user.mention_html()} has been unbanned.", parse_mode="HTML"
+    )
+
+
+async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat = update.effective_chat
+    msg = update.effective_message
+
+    user_id, reason = await extract_user_and_text(msg, context.args)
+
+    if not user_id:
+        return
+
+    try:
+        member = await chat.get_member(user_id)
+    except BadRequest as e:
+        if e.message == "User not found":
+            await msg.reply_text("I can't seem to find this user.")
+            return
+        else:
+            raise e
+
+    if await is_user_ban_protected(chat, user_id):
+        await msg.reply_text("This user is an admin and cannot be kicked.")
+        return
+
+    if user_id == context.bot.id:
+        await msg.reply_text("I can't kick myself!")
+        return
+
+    await chat.unban_member(user_id)
+
+    reply_msg = f"{member.user.mention_html()} has been kicked."
+    if reason:
+        reply_msg += f"\nReason:\n{reason}"
+    await msg.reply_text(reply_msg, parse_mode="HTML")
