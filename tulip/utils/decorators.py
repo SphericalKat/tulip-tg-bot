@@ -6,7 +6,7 @@ from telegram.ext import ContextTypes
 
 def bot_can_restrict(func):
     @wraps(func)
-    async def promote_rights(
+    async def wrapped(
         update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs
     ):
         bot_chat_member = await update.effective_chat.get_member(context.bot.id)
@@ -20,12 +20,52 @@ def bot_can_restrict(func):
                 "I can't restrict members in this chat. Make sure I'm an admin and have the necessary permissions."
             )
 
-    return promote_rights
+    return wrapped
+
+
+def bot_can_promote(func):
+    @wraps(func)
+    async def wrapped(
+        update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs
+    ):
+        bot_chat_member = await update.effective_chat.get_member(context.bot.id)
+        if (
+            bot_chat_member.status == ChatMemberStatus.ADMINISTRATOR
+            and bot_chat_member.can_promote_members
+        ):
+            return await func(update, context)
+        else:
+            await update.effective_message.reply_text(
+                "I can't promote members in this chat. Make sure I'm an admin and have the necessary permissions."
+            )
+
+    return wrapped
+
+
+def user_can_promote(func):
+    @wraps(func)
+    async def wrapped(
+        update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs
+    ):
+        user_chat_member = await update.effective_chat.get_member(
+            update.effective_user.id
+        )
+        if (
+            user_chat_member.status == ChatMemberStatus.ADMINISTRATOR
+            and user_chat_member.can_promote_members
+        ) or user_chat_member.status == ChatMemberStatus.OWNER:
+            return await func(update, context)
+        else:
+            await update.effective_message.reply_text(
+                "You don't have the necessary permissions to promote members in this chat."
+            )
+
+    return wrapped
 
 
 def user_can_restrict(func):
     @wraps(func)
-    async def promote_rights(
+    async def wrapped(
         update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs
     ):
         user_chat_member = await update.effective_chat.get_member(
@@ -41,7 +81,7 @@ def user_can_restrict(func):
                 "You don't have the necessary permissions to restrict members in this chat."
             )
 
-    return promote_rights
+    return wrapped
 
 
 def require_group_chat(func):
