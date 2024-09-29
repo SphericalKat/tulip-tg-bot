@@ -1,6 +1,6 @@
 from telegram import Update
-from telegram.ext import ContextTypes
 from telegram.constants import MessageOriginType
+from telegram.ext import ContextTypes
 
 from tulip.utils.extraction import extract_user
 

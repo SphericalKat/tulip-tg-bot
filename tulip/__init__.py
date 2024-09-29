@@ -1,8 +1,9 @@
 import logging
-from tulip.config import Config
-from telegram.ext import ApplicationBuilder, Defaults
-from telegram.constants import ParseMode
 
+from telegram.constants import ParseMode
+from telegram.ext import ApplicationBuilder, Defaults
+
+from tulip.config import Config
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.DEBUG)

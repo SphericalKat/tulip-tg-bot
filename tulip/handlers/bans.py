@@ -1,3 +1,8 @@
+from telegram import Update
+from telegram.constants import ChatMemberStatus
+from telegram.error import BadRequest
+from telegram.ext import ContextTypes
+
 from tulip import LOGGER
 from tulip.utils.chat_status import is_user_ban_protected
 from tulip.utils.decorators import (
@@ -5,12 +10,6 @@ from tulip.utils.decorators import (
     require_group_chat,
     user_can_restrict,
 )
-
-from telegram import Update
-from telegram.ext import ContextTypes
-from telegram.error import BadRequest
-from telegram.constants import ChatMemberStatus
-
 from tulip.utils.extraction import extract_time, extract_user, extract_user_and_text
 
 

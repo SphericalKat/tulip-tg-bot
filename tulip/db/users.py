@@ -1,10 +1,11 @@
 from typing import List, Optional
 
-from sqlalchemy import select, func
-from tulip import LOGGER
-from tulip.entities.users import User, Chat
-from tulip.db import engine
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+
+from tulip import LOGGER
+from tulip.db import engine
+from tulip.entities.users import Chat, User
 
 
 def get_userid_by_name(username: str) -> Optional[List[User]]:

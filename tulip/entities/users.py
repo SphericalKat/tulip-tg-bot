@@ -1,9 +1,9 @@
 from typing import Optional
 
 from sqlalchemy import Column, ForeignKey, Table
-from tulip.entities.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from tulip.entities.base import Base
 
 chat_members = Table(
     "chat_members",

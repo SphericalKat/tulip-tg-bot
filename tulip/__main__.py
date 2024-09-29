@@ -1,12 +1,11 @@
 from telegram.ext import CommandHandler, MessageHandler
-from tulip.handlers.admin import demote, promote
-from tulip.handlers.bans import ban, kick, tban, unban
-from tulip.handlers.misc import start, id, info
-from tulip.handlers.mute import mute, tmute, unmute
-from tulip.handlers.users import log_user
 
 from tulip import LOGGER, application
-
+from tulip.handlers.admin import demote, promote
+from tulip.handlers.bans import ban, kick, tban, unban
+from tulip.handlers.misc import id, info, start
+from tulip.handlers.mute import mute, tmute, unmute
+from tulip.handlers.users import log_user
 
 if __name__ == "__main__":
     # User handlers

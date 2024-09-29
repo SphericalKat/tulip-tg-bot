@@ -1,6 +1,6 @@
 from telegram import Update, User
-from telegram.ext import ContextTypes
 from telegram.constants import MessageOriginType
+from telegram.ext import ContextTypes
 
 from tulip.db import users as user_repo
 

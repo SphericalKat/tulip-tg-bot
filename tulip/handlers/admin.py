@@ -1,6 +1,7 @@
 from telegram import Update
-from telegram.ext import ContextTypes
 from telegram.constants import ChatMemberStatus
+from telegram.error import BadRequest
+from telegram.ext import ContextTypes
 
 from tulip.utils.decorators import bot_can_promote, require_group_chat, user_can_promote
 from tulip.utils.extraction import extract_user, extract_user_and_text
@@ -87,22 +88,30 @@ async def demote(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # Demote the user by setting all permissions to False
-    await chat.promote_member(
-        user_id=user_id,
-        can_change_info=False,
-        can_post_messages=False,
-        can_edit_messages=False,
-        can_delete_messages=False,
-        can_invite_users=False,
-        can_restrict_members=False,
-        can_pin_messages=False,
-        can_promote_members=False,
-        is_anonymous=False,
-        can_manage_chat=False,
-        can_manage_video_chats=False,
-        can_manage_topics=False,
-        can_post_stories=False,
-        can_edit_stories=False,
-        can_delete_stories=False,
-    )
-    await msg.reply_text(f"{user_member.user.mention_html()} is no longer an admin.")
+    try:
+        await chat.promote_member(
+            user_id=user_id,
+            can_change_info=False,
+            can_post_messages=False,
+            can_edit_messages=False,
+            can_delete_messages=False,
+            can_invite_users=False,
+            can_restrict_members=False,
+            can_pin_messages=False,
+            can_promote_members=False,
+            is_anonymous=False,
+            can_manage_chat=False,
+            can_manage_video_chats=False,
+            can_manage_topics=False,
+            can_post_stories=False,
+            can_edit_stories=False,
+            can_delete_stories=False,
+        )
+        await msg.reply_text(
+            f"{user_member.user.mention_html()} is no longer an admin."
+        )
+    except BadRequest:
+        await msg.reply_text(
+            f"Could not demote {user_member.user.mention_html()}. The admin status "
+            "might be appointed by another user, so I can't demote them."
+        )
