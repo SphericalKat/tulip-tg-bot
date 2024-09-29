@@ -2,7 +2,9 @@ from telegram import Chat, ChatMember
 from telegram.constants import ChatMemberStatus, ChatType
 
 
-async def is_user_ban_protected(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
+async def is_user_ban_protected(
+    chat: Chat, user_id: int, member: ChatMember = None
+) -> bool:
     if chat.type == ChatType.PRIVATE:
         return True
 

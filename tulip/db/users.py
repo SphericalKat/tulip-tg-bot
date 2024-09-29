@@ -10,7 +10,11 @@ from sqlalchemy.orm import Session
 def get_userid_by_name(username: str) -> Optional[List[User]]:
     try:
         with Session(engine) as session:
-            return session.query(User).filter(func.lower(User.username) == username.lower()).all()
+            return (
+                session.query(User)
+                .filter(func.lower(User.username) == username.lower())
+                .all()
+            )
     except Exception as e:
         LOGGER.exception("Error getting user by name", e)
         return None
@@ -47,8 +51,10 @@ def update_user(
             chat.title = chat_name
 
         # upsert chat member
-        query = select(User).join(User.chats).where(User.id == user_id, Chat.id == chat_id)
-        
+        query = (
+            select(User).join(User.chats).where(User.id == user_id, Chat.id == chat_id)
+        )
+
         member = session.scalars(query).first()
         if not member:
             user.chats.append(chat)

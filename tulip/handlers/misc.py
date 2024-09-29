@@ -30,18 +30,18 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             user = await context.bot.get_chat(user_id)
             await update.effective_message.reply_text(
-                f"{user.first_name}'s id is <code>{user.id}</code>.", parse_mode="HTML"
+                f"{user.first_name}'s id is <code>{user.id}</code>."
             )
     else:
         chat = update.effective_chat
         if chat.type == "private":
             await update.effective_message.reply_text(
-                f"Your id is <code>{chat.id}</code>.", parse_mode="HTML"
+                f"Your id is <code>{chat.id}</code>."
             )
 
         else:
             await update.effective_message.reply_text(
-                f"This group's id is <code>{chat.id}</code>.", parse_mode="HTML"
+                f"This group's id is <code>{chat.id}</code>."
             )
 
 
@@ -62,17 +62,18 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # build the message
-    text = "<b>User info</b>:\n" \
-    f"<b>ID</b>: <code>{user.id}</code>\n" \
-    f"<b>First name</b>: {user.first_name}\n" \
-    
+    text = (
+        "<b>User info</b>:\n"
+        f"<b>ID</b>: <code>{user.id}</code>\n"
+        f"<b>First name</b>: {user.first_name}\n"
+    )
     if user.last_name:
         text += f"<b>Last name</b>: {user.last_name}\n"
-    
+
     if user.username:
         text += f"<b>Username</b>: @{user.username}\n"
-    
+
     text += f"<b>User link</b>: <a href='tg://user?id={user.id}'>link</a>"
 
     # send the message
-    await msg.reply_text(text, parse_mode="HTML")
+    await msg.reply_text(text)

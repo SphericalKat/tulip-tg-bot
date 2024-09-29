@@ -51,7 +51,7 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         await chat.ban_member(user_id)
-        await msg.reply_text(message, parse_mode="HTML")
+        await msg.reply_text(message)
     except BadRequest as e:
         if e.message == "Reply message not found":
             await msg.reply_text(message, quote=False)
@@ -101,9 +101,7 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     await chat.unban_member(user_id)
-    await msg.reply_text(
-        f"{member.user.mention_html()} has been unbanned.", parse_mode="HTML"
-    )
+    await msg.reply_text(f"{member.user.mention_html()} has been unbanned.")
 
 
 @require_group_chat
@@ -141,7 +139,7 @@ async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_msg = f"{member.user.mention_html()} has been kicked."
     if reason:
         reply_msg += f"\nReason:\n{reason}"
-    await msg.reply_text(reply_msg, parse_mode="HTML")
+    await msg.reply_text(reply_msg)
 
 
 @require_group_chat
@@ -199,7 +197,7 @@ async def tban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         if reason:
             reply_msg += f"\nReason:\n{reason}"
-        await msg.reply_text(reply_msg, parse_mode="HTML")
+        await msg.reply_text(reply_msg)
     except BadRequest as e:
         if e.message == "Reply message not found":
             await msg.reply_text(reply_msg, quote=False)

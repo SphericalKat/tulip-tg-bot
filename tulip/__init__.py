@@ -1,6 +1,7 @@
 import logging
 from tulip.config import Config
-from telegram.ext import ApplicationBuilder
+from telegram.ext import ApplicationBuilder, Defaults
+from telegram.constants import ParseMode
 
 
 LOGGER = logging.getLogger(__name__)
@@ -17,5 +18,10 @@ LOGGER.info("Logger initialized.")
 
 config = Config()
 
-application = ApplicationBuilder().token(config.BOT_API_TOKEN).build()
+application = (
+    ApplicationBuilder()
+    .token(config.BOT_API_TOKEN)
+    .defaults(Defaults(parse_mode=ParseMode.HTML))
+    .build()
+)
 bot = application.bot

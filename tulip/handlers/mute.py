@@ -50,8 +50,10 @@ async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message += f"\nReason:\n{reason}"
 
     try:
-        await chat.restrict_member(user_id, permissions=ChatPermissions.no_permissions())
-        await msg.reply_text(message, parse_mode="HTML")
+        await chat.restrict_member(
+            user_id, permissions=ChatPermissions.no_permissions()
+        )
+        await msg.reply_text(message)
     except BadRequest as e:
         if e.message == "Reply message not found":
             await msg.reply_text(message, quote=False)
@@ -101,9 +103,7 @@ async def unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     await chat.restrict_member(user_id, permissions=ChatPermissions.all_permissions())
-    await msg.reply_text(
-        f"{member.user.mention_html()} has been unmuted.", parse_mode="HTML"
-    )
+    await msg.reply_text(f"{member.user.mention_html()} has been unmuted.")
 
 
 @require_group_chat
@@ -155,13 +155,15 @@ async def tmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     try:
-        await chat.restrict_member(user_id, until_date=ban_time, permissions=ChatPermissions.no_permissions())
+        await chat.restrict_member(
+            user_id, until_date=ban_time, permissions=ChatPermissions.no_permissions()
+        )
         reply_msg = (
             f"{member.user.mention_html()} has been temporarily muted for {time_val}."
         )
         if reason:
             reply_msg += f"\nReason:\n{reason}"
-        await msg.reply_text(reply_msg, parse_mode="HTML")
+        await msg.reply_text(reply_msg)
     except BadRequest as e:
         if e.message == "Reply message not found":
             await msg.reply_text(reply_msg, quote=False)
