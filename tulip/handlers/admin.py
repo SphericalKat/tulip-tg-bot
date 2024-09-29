@@ -2,19 +2,27 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from telegram.constants import ChatMemberStatus
 
+from tulip.utils.decorators import bot_can_promote, require_group_chat, user_can_promote
 from tulip.utils.extraction import extract_user, extract_user_and_text
 
 
+@bot_can_promote
+@user_can_promote
+@require_group_chat
 async def promote(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     msg = update.effective_message
 
-    user_id, title = await extract_user_and_text(msg)
+    user_id, title = await extract_user_and_text(msg, context.args)
     if not user_id:
         await msg.reply_text("You need to provide a user to promote.")
         return
 
     user_member = await chat.get_member(user_id)
+    if user_member.status == ChatMemberStatus.LEFT:
+        await msg.reply_text("This user is not in the chat.")
+        return
+
     if user_member.status in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
         await msg.reply_text("This user is already an admin.")
         return
@@ -59,12 +67,17 @@ async def demote(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     msg = update.effective_message
 
-    user_id = await extract_user(msg)
+    user_id = await extract_user(msg, context.args)
     if not user_id:
         await msg.reply_text("You need to provide a user to demote.")
         return
 
     user_member = await chat.get_member(user_id)
+
+    if user_member.status == ChatMemberStatus.LEFT:
+        await msg.reply_text("This user is not in the chat.")
+        return
+
     if user_member.status != ChatMemberStatus.ADMINISTRATOR:
         await msg.reply_text("This user is not an admin.")
         return
