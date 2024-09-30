@@ -1,9 +1,15 @@
 from telegram import Update
-from telegram.constants import ChatMemberStatus
+from telegram.constants import ChatMemberStatus, ChatType
 from telegram.error import BadRequest
 from telegram.ext import ContextTypes
 
-from tulip.utils.decorators import bot_can_promote, require_group_chat, user_can_promote
+from tulip.utils.decorators import (
+    bot_can_pin,
+    bot_can_promote,
+    require_group_chat,
+    user_can_pin,
+    user_can_promote,
+)
 from tulip.utils.extraction import extract_user, extract_user_and_text
 
 
@@ -115,3 +121,47 @@ async def demote(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Could not demote {user_member.user.mention_html()}. The admin status "
             "might be appointed by another user, so I can't demote them."
         )
+
+
+@bot_can_pin
+@user_can_pin
+async def pin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+
+    if update.effective_chat.type not in [
+        ChatType.PRIVATE,
+        ChatType.GROUP,
+        ChatType.SUPERGROUP,
+    ]:
+        # ignore channels
+        return
+
+    if not msg.reply_to_message:
+        await msg.reply_text("Reply to a message to pin it.")
+        return
+
+    silent = True
+    if len(context.args) and context.args[0].lower() == "loud":
+        silent = False
+
+    try:
+        await msg.reply_to_message.pin(disable_notification=silent)
+    except BadRequest as e:
+        if e.message == "Chat_not_modified":
+            pass
+        else:
+            raise e
+
+
+@bot_can_pin
+@user_can_pin
+async def unpin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+
+    try:
+        await msg.chat.unpin_message()
+    except BadRequest as e:
+        if e.message == "Chat_not_modified":
+            pass
+        else:
+            raise e

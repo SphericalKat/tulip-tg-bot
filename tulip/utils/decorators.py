@@ -130,7 +130,7 @@ def require_group_chat(func):
     async def wrapped(
         update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs
     ):
-        if update.effective_chat.type == ChatType.PRIVATE:
+        if update.effective_chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:
             await update.effective_message.reply_text(
                 "This command can only be used in groups."
             )

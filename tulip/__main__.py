@@ -1,7 +1,7 @@
 from telegram.ext import CommandHandler, MessageHandler
 
 from tulip import LOGGER, application
-from tulip.handlers.admin import demote, promote
+from tulip.handlers.admin import demote, pin, promote, unpin
 from tulip.handlers.bans import ban, kick, tban, unban
 from tulip.handlers.misc import id, info, start
 from tulip.handlers.mute import mute, tmute, unmute
@@ -30,6 +30,8 @@ if __name__ == "__main__":
     # admin handlers
     application.add_handler(CommandHandler("promote", promote), group=2)
     application.add_handler(CommandHandler("demote", demote), group=2)
+    application.add_handler(CommandHandler("pin", pin), group=2)
+    application.add_handler(CommandHandler("unpin", unpin), group=2)
 
     LOGGER.info("Starting polling...")
     application.run_polling()
