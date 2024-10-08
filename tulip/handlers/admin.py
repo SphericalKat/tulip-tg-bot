@@ -70,6 +70,9 @@ async def promote(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await msg.reply_text(f"{user_member.user.mention_html()} is now an admin.")
 
 
+@bot_can_promote
+@user_can_promote
+@require_group_chat
 async def demote(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     msg = update.effective_message
